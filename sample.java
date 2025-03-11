@@ -25,3 +25,35 @@ class Solution {
         return result;
     }
 }
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        Map<Character, Integer> m = new HashMap<>();
+        int time=0;
+        for (int i=0;i<tasks.length;i++) {
+            if (!m.containsKey(tasks[i])) {
+                m.put(tasks[i], 1);
+            } else {
+                m.put(tasks[i], m.get(tasks[i])+1);
+            }
+        }
+        PriorityQueue<Integer> q = new PriorityQueue<>((a, b) -> (b - a));
+        m.forEach((k,v) -> q.add(v));
+
+        while (!q.isEmpty()) {
+            int cycle = n +1 ;
+            int tasksCount=0;
+            List<Integer> store = new ArrayList<>();
+            while (cycle > 0 && !q.isEmpty()) {
+                int currfreq = q.poll();
+                if (currfreq > 1) {
+                    store.add(currfreq-1);                    
+                }
+                tasksCount++;
+                cycle--;
+            }
+            store.forEach(num -> q.add(num));
+            time = time + (q.isEmpty() ? tasksCount : n+1);
+        }
+        return time;
+    }
+}
